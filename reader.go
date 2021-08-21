@@ -1,9 +1,12 @@
 package sproc
 
 import (
+	"encoding/csv"
 	"encoding/json"
+	"github.com/jszwec/csvutil"
 	"io"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -11,6 +14,34 @@ import (
 type Reader interface {
 	// Read can used to implement the data streaming
 	Read(call func(v interface{}))
+}
+
+func NewCSVReader(r io.Reader, e interface{}) Reader {
+	return csvReader{
+		reader:  r,
+		encoder: e,
+	}
+}
+
+type csvReader struct {
+	reader  io.Reader
+	encoder interface{}
+}
+
+func (c csvReader) Read(call func(v interface{})) {
+	csvReader := csv.NewReader(c.reader)
+	dec, err := csvutil.NewDecoder(csvReader)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for {
+		if err := dec.Decode(&c.encoder); err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatal(err)
+		}
+		call(c.encoder)
+	}
 }
 
 type stringReader struct {

@@ -7,6 +7,9 @@ type Streamer interface {
 	// Transform is a Map like function to mutate, add custom logic down to the stream
 	Transform(func(val interface{}) (k interface{}, v interface{})) Streamer
 
+	// Filter is a data reducer operation can skip the downstream
+	Filter(func(val interface{}) bool) Streamer
+
 	// ToStore is a Reducer like function to aggregate all final state to the state store, also final call function
 	ToStore() Streamer
 
@@ -17,7 +20,7 @@ type Streamer interface {
 	Limit(limit int) Streamer
 
 	// Print is a stream operation to print final state results
-	Print(print func(val interface{})) Streamer
+	Print(print func(idx, val interface{})) Streamer
 }
 
 func NewStream(reader Reader, store Store) Streamer {
@@ -28,6 +31,7 @@ type stream struct {
 	reader    Reader
 	store     Store
 	transform func(val interface{}) (k interface{}, v interface{})
+	filter    func(val interface{}) bool
 	reduced   []interface{}
 }
 
@@ -36,8 +40,21 @@ func (s *stream) Transform(call func(val interface{}) (k interface{}, v interfac
 	return s
 }
 
+func (s *stream) Filter(call func(val interface{}) bool) Streamer {
+	s.filter = call
+	return s
+}
+
 func (s *stream) ToStore() Streamer {
+	if s.filter == nil {
+		s.filter = func(val interface{}) bool {
+			return true
+		}
+	}
 	s.reader.Read(func(v interface{}) {
+		if !s.filter(v) {
+			return
+		}
 		k, v := s.transform(v)
 		err := s.store.Set(k, v)
 		if err != nil {
@@ -68,13 +85,13 @@ func (s *stream) Limit(limit int) Streamer {
 	return s
 }
 
-func (s *stream) Print(print func(val interface{})) Streamer {
+func (s *stream) Print(print func(idx, val interface{})) Streamer {
 	if s.reduced == nil {
 		aa, _ := s.store.GetAll()
 		s.reduced = aa
 	}
-	for _, a := range s.reduced {
-		print(a)
+	for i, a := range s.reduced {
+		print(i, a)
 	}
 	return s
 }

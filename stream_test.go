@@ -12,7 +12,7 @@ import (
 
 func TestNewStream(t *testing.T) {
 	store := NewMemStore("my-store")
-	data := mockStringReader()
+	data := mockStringUserReader()
 	reader := stringReader{
 		reader:  data,
 		encoder: new(domain.User),
@@ -32,7 +32,7 @@ func TestNewStream(t *testing.T) {
 
 func TestStream_Transform(t *testing.T) {
 	store := NewMemStore("my-store")
-	data := mockStringReader()
+	data := mockStringUserReader()
 	reader := stringReader{
 		reader:  data,
 		encoder: new(domain.User),
@@ -60,7 +60,7 @@ func TestStream_Transform(t *testing.T) {
 
 func TestStream_Sort(t *testing.T) {
 	store := NewMemStore("my-store")
-	data := mockStringReader()
+	data := mockStringUserReader()
 	reader := stringReader{
 		reader:  data,
 		encoder: new(domain.User),
@@ -100,7 +100,7 @@ func TestStream_Sort(t *testing.T) {
 
 func TestStream_Limit(t *testing.T) {
 	store := NewMemStore("my-store")
-	data := mockStringReader()
+	data := mockStringUserReader()
 	reader := stringReader{
 		reader:  data,
 		encoder: new(domain.User),
@@ -117,6 +117,37 @@ func TestStream_Limit(t *testing.T) {
 		return u.Id, m
 	}).ToStore().Limit(expectL)
 
+	count := 0
+	strm.Print(func(val interface{}) {
+		count++
+	})
+	if expectL != count {
+		t.Errorf("expect limit [%v] got limit [%v]", expectL, count)
+	}
+}
+
+func TestStream_Filter(t *testing.T) {
+	store := NewMemStore("my-store")
+	data := mockStringUserReader()
+	reader := stringReader{
+		reader:  data,
+		encoder: new(domain.User),
+	}
+
+	strm := NewStream(reader, store).Filter(func(val interface{}) bool {
+		u := val.(*domain.User)
+		return u.Id == "8422699"
+	}).Transform(func(val interface{}) (k interface{}, v interface{}) {
+		u := val.(*domain.User)
+		m := domain.ResultMat{
+			Id:    u.Id,
+			Name:  u.Name,
+			Count: rand.Intn(100),
+		}
+		return u.Id, m
+	}).ToStore()
+
+	expectL := 1
 	count := 0
 	strm.Print(func(val interface{}) {
 		count++
