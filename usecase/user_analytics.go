@@ -7,8 +7,6 @@ import (
 	"sort"
 )
 
-
-
 type UserAnalytics struct {
 	UserStream  sproc.Reader
 	EventSteam  sproc.Reader
