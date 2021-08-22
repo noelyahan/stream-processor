@@ -89,7 +89,7 @@ func TestStream_Sort(t *testing.T) {
 	})
 
 	last := 200
-	strm.Print(func(val interface{}) {
+	strm.Print(func(idx, val interface{}) {
 		a := val.(domain.ResultMat)
 		if last < a.Count {
 			t.Fatal("error in sorting")
@@ -118,7 +118,7 @@ func TestStream_Limit(t *testing.T) {
 	}).ToStore().Limit(expectL)
 
 	count := 0
-	strm.Print(func(val interface{}) {
+	strm.Print(func(idx, val interface{}) {
 		count++
 	})
 	if expectL != count {
@@ -149,7 +149,7 @@ func TestStream_Filter(t *testing.T) {
 
 	expectL := 1
 	count := 0
-	strm.Print(func(val interface{}) {
+	strm.Print(func(idx, val interface{}) {
 		count++
 	})
 	if expectL != count {
