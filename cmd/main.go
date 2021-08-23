@@ -15,7 +15,7 @@ func main() {
 	supFlags := []string{"commit", "watch", "users", "repos"}
 	analyzePtr := flag.String("analyze", "users", "[-analyze users] (only users and repos supported)")
 	filtersPtr := flag.String("filters", "commit", `[-filter commit] (only commit and watch supported)`)
-	dataLocPtr := flag.String("data_dir", "../data", `[-data_dir ../data]`)
+	dataLocPtr := flag.String("data_dir", "./data", `[-data_dir ../data]`)
 	flag.Parse()
 
 	invalidF1 := true
@@ -34,6 +34,7 @@ func main() {
 	}
 
 	if *analyzePtr == "users" {
+		fmt.Println("--------- active users by commit + pr ---------")
 		userStream := sproc.NewCSVReader(loadFileReader(*dataLocPtr, "actors.csv"), new(domain.User))
 		eventStream := sproc.NewCSVReader(loadFileReader(*dataLocPtr, "events.csv"), new(domain.Event))
 		usecase := usecase.UserAnalytics{
@@ -51,8 +52,10 @@ func main() {
 		EventSteam: eventStream,
 	}
 	if *filtersPtr == "commit" {
+		fmt.Println("--------- active repos by commits ---------")
 		usecase.TopRepositoriesByCommit()
 	} else if *filtersPtr == "watch" {
+		fmt.Println("--------- active repos by watch events ---------")
 		usecase.TopRepositoriesByWatchEvent()
 	}
 }
