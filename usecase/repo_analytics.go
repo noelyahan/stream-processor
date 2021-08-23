@@ -19,6 +19,12 @@ func (u *RepoAnalytics) TopRepositoriesByCommit() {
 	u.processRepoStream()
 	u.processEventStream(func(val interface{}) bool {
 		e := val.(*domain.Event)
+
+		repo, _ := u.repoStore.Get(e.RepoId)
+		if repo == nil {
+			return false
+		}
+
 		return e.Type == domain.CommitEventType
 	})
 }
@@ -27,6 +33,12 @@ func (u *RepoAnalytics) TopRepositoriesByWatchEvent() {
 	u.processRepoStream()
 	u.processEventStream(func(val interface{}) bool {
 		e := val.(*domain.Event)
+
+		repo, _ := u.repoStore.Get(e.RepoId)
+		if repo == nil {
+			return false
+		}
+
 		return e.Type == domain.WatchEventType
 	})
 }

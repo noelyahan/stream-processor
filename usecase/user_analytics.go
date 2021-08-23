@@ -34,6 +34,10 @@ func (u *UserAnalytics) ActiveUsersByCommitPRs() {
 	sproc.NewStream(u.EventSteam, u.resultStore).
 		Filter(func(val interface{}) bool {
 			e := val.(*domain.Event)
+			user, _ := u.userStore.Get(e.ActorId)
+			if user == nil {
+				return false
+			}
 			return e.Type == domain.PrEventType || e.Type == domain.CommitEventType
 		}).
 		Transform(func(val interface{}) (k interface{}, v interface{}) {
