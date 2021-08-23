@@ -2,9 +2,10 @@ package usecase
 
 import (
 	"fmt"
+	"sort"
+
 	sproc "github.com/noelyahan/stream-processor"
 	"github.com/noelyahan/stream-processor/domain"
-	"sort"
 )
 
 type RepoAnalytics struct {

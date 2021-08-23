@@ -13,7 +13,7 @@ func TestSort(t *testing.T) {
 		aa = append(aa, ResultMat{
 			Id:    fmt.Sprintf("user%d", i),
 			Name:  fmt.Sprintf("user%d", i),
-			Count: time.Now().Second()%i,
+			Count: time.Now().Second() % i,
 		})
 	}
 	sort.Sort(ByCount(aa))

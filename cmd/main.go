@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	sproc "github.com/noelyahan/stream-processor"
-	"github.com/noelyahan/stream-processor/domain"
-	"github.com/noelyahan/stream-processor/usecase"
 	"io"
 	"log"
 	"os"
+
+	sproc "github.com/noelyahan/stream-processor"
+	"github.com/noelyahan/stream-processor/domain"
+	"github.com/noelyahan/stream-processor/usecase"
 )
 
 func main() {

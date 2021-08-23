@@ -1,11 +1,12 @@
 package usecase
 
 import (
-	sproc "github.com/noelyahan/stream-processor"
-	"github.com/noelyahan/stream-processor/domain"
 	"log"
 	"os"
 	"testing"
+
+	sproc "github.com/noelyahan/stream-processor"
+	"github.com/noelyahan/stream-processor/domain"
 )
 
 func TestRepoAnalytics_TopRepositoriesByCommit(t *testing.T) {
@@ -21,8 +22,8 @@ func TestRepoAnalytics_TopRepositoriesByCommit(t *testing.T) {
 	}
 	eventStream := sproc.NewCSVReader(f2, new(domain.Event))
 	usecase := RepoAnalytics{
-		RepoStream:  repoStream,
-		EventSteam:  eventStream,
+		RepoStream: repoStream,
+		EventSteam: eventStream,
 	}
 	usecase.TopRepositoriesByCommit()
 }
@@ -40,8 +41,8 @@ func TestRepoAnalytics_TopRepositoriesByWatchEvent(t *testing.T) {
 	}
 	eventStream := sproc.NewCSVReader(f2, new(domain.Event))
 	usecase := RepoAnalytics{
-		RepoStream:  repoStream,
-		EventSteam:  eventStream,
+		RepoStream: repoStream,
+		EventSteam: eventStream,
 	}
 	usecase.TopRepositoriesByWatchEvent()
 }

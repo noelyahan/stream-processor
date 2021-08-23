@@ -1,11 +1,12 @@
 package usecase
 
 import (
-	sproc "github.com/noelyahan/stream-processor"
-	"github.com/noelyahan/stream-processor/domain"
 	"log"
 	"os"
 	"testing"
+
+	sproc "github.com/noelyahan/stream-processor"
+	"github.com/noelyahan/stream-processor/domain"
 )
 
 func TestUserAnalytics_ActiveUsersByCommitPRs(t *testing.T) {
@@ -21,8 +22,8 @@ func TestUserAnalytics_ActiveUsersByCommitPRs(t *testing.T) {
 	}
 	eventStream := sproc.NewCSVReader(f2, new(domain.Event))
 	usecase := UserAnalytics{
-		UserStream:  userStream,
-		EventSteam:  eventStream,
+		UserStream: userStream,
+		EventSteam: eventStream,
 	}
 	usecase.ActiveUsersByCommitPRs()
 }

@@ -1,14 +1,14 @@
 package sproc
 
 import (
-	"github.com/noelyahan/stream-processor/domain"
 	"math/rand"
 	"reflect"
 	"sort"
 	"testing"
 	"time"
-)
 
+	"github.com/noelyahan/stream-processor/domain"
+)
 
 func TestNewStream(t *testing.T) {
 	store := NewMemStore("my-store")
@@ -28,7 +28,6 @@ func TestNewStream(t *testing.T) {
 		t.Error("expect data from final state store")
 	}
 }
-
 
 func TestStream_Transform(t *testing.T) {
 	store := NewMemStore("my-store")
@@ -52,7 +51,7 @@ func TestStream_Transform(t *testing.T) {
 	expectMap := reflect.TypeOf(domain.ResultMat{}).Name()
 	for _, a := range aa {
 		got := reflect.TypeOf(a).Name()
-		if  got != expectMap {
+		if got != expectMap {
 			t.Errorf("expect to be mapped [%v] but got [%v]", expectMap, got)
 		}
 	}

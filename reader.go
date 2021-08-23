@@ -3,11 +3,12 @@ package sproc
 import (
 	"encoding/csv"
 	"encoding/json"
-	"github.com/jszwec/csvutil"
 	"io"
 	"io/ioutil"
 	"log"
 	"strings"
+
+	"github.com/jszwec/csvutil"
 )
 
 // Reader is the interface to wrap custom data reader functionality

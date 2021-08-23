@@ -1,12 +1,13 @@
 package sproc
 
 import (
-	"github.com/noelyahan/stream-processor/domain"
 	"io"
 	"log"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/noelyahan/stream-processor/domain"
 )
 
 func mockStringUserReader() io.Reader {
